@@ -1,19 +1,51 @@
 <?php
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SkinController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RandomController;
+use App\Http\Controllers\EloController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+/**
+ * Auth 
+ */
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/reset', [AuthController::class, 'resetPassword']);
+Route::get('/reset/{token}', [AuthController::class, 'checkToken']);
+Route::post('/change-password', [AuthController::class, 'changePassword']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Auth Social
+ */
+// Google
+ 
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+ 
+Route::get('/auth/callback', function () {
+    $githubUser = Socialite::driver('github')->user();
+    $user = User::updateOrCreate([
+        'github_id' => $githubUser->id,
+    ], [
+        'name' => $githubUser->name,
+        'email' => $githubUser->email,
+        'github_token' => $githubUser->token,
+        'github_refresh_token' => $githubUser->refreshToken,
+    ]);
+    Auth::login($user);
+    return redirect('/dashboard');
+});
+
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/check', [UserController::class, 'check']);
+    Route::get('/perfil', [UserController::class, 'getPerfil']);
+    Route::post('/perfil', [UserController::class, 'updatePerfil']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
