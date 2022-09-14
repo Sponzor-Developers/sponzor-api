@@ -2,14 +2,12 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SkinController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\RandomController;
-use App\Http\Controllers\EloController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
+Route::get('/', [HomeController::class, 'index']);
 /**
  * Auth 
  */

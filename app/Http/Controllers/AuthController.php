@@ -17,7 +17,7 @@ use App\Mail\SendMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\ReturnController;
+use App\Http\Controllers\JsonController;
 use Laravel\Socialite\Facades\Socialite;
 
 
@@ -44,14 +44,14 @@ class AuthController extends Controller
                 $user = Auth::user();
                 $tokenResult = $user->createToken('JWT');
 
-                return new ReturnController('success', 200, 'Login realizado com sucesso', [
+                return JsonController::return('success', 200, 'Login realizado com sucesso', [
                     'token' => $tokenResult->plainTextToken,
                     'user' => $user
                 ]);
             }
-            return new ReturnController('error', 401, 'Email ou senha incorretos');
+            return JsonController::return('error', 401, 'Usuário ou senha inválidos');
         }catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao realizar login');
         }
     }
 
@@ -83,12 +83,12 @@ class AuthController extends Controller
                 'marketplace' => $result['marketplace']
             ]);
             $tokenResult = $user->createToken('JWT');
-            return new ReturnController('success', 200, 'Usuário criado com sucesso', [
+            return JsonController::return('success', 200, 'Usuário criado com sucesso', [
                 'token' => $tokenResult->plainTextToken,
                 'user' => $user
             ]);
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao criar usuário');
         }
     }
 
@@ -113,11 +113,11 @@ class AuthController extends Controller
                     'created_at' => now()
                 ]);
                 Mail::to($user->email)->send(new SendMail($token));
-                return new ReturnController('success', 200, 'Email enviado com sucesso');
+                return JsonController::return('success', 200, 'Email enviado com sucesso');
             }
-            return new ReturnController('error', 401, 'Email não encontrado');
+            return JsonController::return('error', 401, 'Email não encontrado');
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao enviar email');
         }
     }
 
@@ -134,11 +134,11 @@ class AuthController extends Controller
         try {
             $token = DB::table('password_resets')->where('token', $result['token'])->first();
             if ($token) {
-                return new ReturnController('success', 200, 'Token válido');
+                return JsonController::return('success', 200, 'Token válido');
             }
-            return new ReturnController('error', 401, 'Token inválido');
+            return JsonController::return('error', 401, 'Token inválido');
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao verificar token');
         }
     }
 
@@ -161,10 +161,10 @@ class AuthController extends Controller
                 $user->password = bcrypt($result['password']);
                 $user->save();
                 DB::table('password_resets')->where('token', $result['token'])->delete();
-                return new ReturnController('success', 200, 'Senha alterada com sucesso');
+                return JsonController::return('success', 200, 'Senha alterada com sucesso');
             }
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao alterar senha');
         }
     }
 
@@ -179,9 +179,9 @@ class AuthController extends Controller
     {
         try {
             $request->user()->currentAccessToken()->delete();
-            return new ReturnController('success', 200, 'Logout realizado com sucesso');
+            return JsonController::return('success', 200, 'Logout realizado com sucesso');
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao realizar logout');
         }
     }
 
@@ -195,11 +195,9 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         try {
-            return new ReturnController('success', 200, 'Usuário logado', [
-                'user' => $request->user()
-            ]);
+            return JsonController::return('success', 200, 'Usuário retornado com sucesso', $request->user());
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao retornar usuário');
         }
     }
 
@@ -223,12 +221,12 @@ class AuthController extends Controller
                 'password' => bcrypt(Str::random(10))
             ]);
             $token = $user->createToken('JWT')->plainTextToken;
-            return new ReturnController('success', 200, 'Login realizado com sucesso', [
+            return JsonController::return('success', 200, 'Login realizado com sucesso', [
                 'token' => $token,
                 'user' => $user
             ]);
         } catch (\Exception $e) {
-            return new ReturnController('error', 500, 'Erro interno do servidor');
+            return JsonController::return('error', 500, 'Erro ao realizar login');
         }
     }
 

@@ -6,14 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
-use App\Http\Controllers\SkinController;
 use App\Models\User;
+use App\Http\Controllers\ReturnController;
+
 
 
 class UserController extends Controller
 {
 
-    public function index(Request $request) : json
+    public function index(Request $request)
     {
         $user = $request->user();
         return response()->json($user);

@@ -4,28 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ReturnController extends Controller
+class JsonController extends Controller
 {
-
     /**
-     * Regra de negocio
-     * status
-     * code
-     * message
-     * data
+     * Retorno de requisições
+     *
+     * @param string $status
+     * @param integer $code
+     * @param string $message
+     * @param array $data
+     * @return void
      */
-    public function __construct(string $status, int $code, string $message, array $data = [])
+    public static function return(string $status, int $code, string $message, array $data = [])
     {
-        $this->status = self::status($status);
-        $this->code = self::code($code);
-        $this->message = self::message($message);
-        $this->data = self::data($data);
         return response()->json([
-            'status' => $this->status,
-            'code' => $this->code,
-            'message' => $this->message,
-            'data' => $this->data
-        ], $this->code);
+            'status' => self::status($status),
+            'code' => self::code($code),
+            'message' => self::message($message),
+            'data' => self::data($data)
+        ], $code);
     }
 
     /**
@@ -34,7 +31,7 @@ class ReturnController extends Controller
      * @param string $status
      * @return string
      */
-    private function status(string $status) : string
+    private static function status(string $status) : string
     {
         if (in_array($status, [
             'success' => 'success',
@@ -53,7 +50,7 @@ class ReturnController extends Controller
      * @param integer $code
      * @return integer
      */
-    private function code(int $code) : int
+    private static function code(int $code) : int
     {
         if($code >= 100 && $code <= 599){
             return $code;
@@ -67,7 +64,7 @@ class ReturnController extends Controller
      * @param string $message
      * @return string
      */
-    private function message(string $message) : string
+    private static function message(string $message) : string
     {
         if(is_string($message)){
             return $message;
@@ -75,7 +72,13 @@ class ReturnController extends Controller
         return 'Erro interno';
     }
 
-    private function data($data)
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return array
+     */
+    private static function data(array $data) : array
     {
         if(is_array($data)){
             return $data;
