@@ -116,5 +116,3 @@ INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1);
 INSERT INTO `migrations` VALUES (2,'2014_10_12_100000_create_password_resets_table',1);
 INSERT INTO `migrations` VALUES (3,'2019_08_19_000000_create_failed_jobs_table',1);
 INSERT INTO `migrations` VALUES (4,'2019_12_14_000001_create_personal_access_tokens_table',1);
-INSERT INTO `migrations` VALUES (5,'2022_05_17_021647_create_products_table',1);
-INSERT INTO `migrations` VALUES (6,'2022_05_22_201609_create_orders_table',2);

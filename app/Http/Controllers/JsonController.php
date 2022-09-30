@@ -15,14 +15,23 @@ class JsonController extends Controller
      * @param array $data
      * @return void
      */
-    public static function return(string $status, int $code, string $message, array $data = [])
+    public static function return(string $status = 'error', int $code = 500, string $message = "", array $data = [])
     {
-        return response()->json([
+        $response = [
             'status' => self::status($status),
-            'code' => self::code($code),
-            'message' => self::message($message),
-            'data' => self::data($data)
-        ], $code);
+            'code' => self::code($code)
+        ];
+        if ($message != "") {
+            $response['message'] = $message;
+        }
+        if(count($data) > 0){
+            $response['data'] = $data;
+        }
+        return response()->json($response, $code, [
+            'Content-Type' => 'application/json;charset=UTF-8',
+            'Accept' => 'application/json',
+            'Charset' => 'utf-8'
+        ], JSON_UNESCAPED_UNICODE);
     }
 
     /**

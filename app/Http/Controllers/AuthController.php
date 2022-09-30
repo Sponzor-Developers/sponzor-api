@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JsonController;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Password;
 
 
 
@@ -39,6 +40,10 @@ class AuthController extends Controller
             'email' => 'required|string|email|min:5|max:155',
             'password' => 'required|string|min:8|max:50',
         ]);
+        if(!$result)
+        {
+            return JsonController::return('error',400, 'Dados inválidos');
+        }
         try{
             if (Auth::attempt(['email' => $result['email'], 'password' => $result['password']], true)) {
                 $user = Auth::user();
@@ -63,24 +68,32 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+
+        // name, enterprise, business, email, password, phone, is_admin
         
         $result = $request->validate([
-            'email' => 'required|string|email|unique:users|min:5|max:191',
-            'name' => 'required|string|max:155|min:3',
-            'password' => 'required|string|max:50|min:8',
-            'name_enterprise' => 'required|string|max:155|min:3',
-            'phone' => 'required|string|max:11|min:12',
-            'marketplace' => 'required|string|max:155|min:3',
+            'name' => 'required|string|min:3|max:155',
+            'enterprise' => 'required|string|min:3|max:155',
+            'business' => 'required|string|min:3|max:155',
+            'email' => 'required|string|email|min:5|max:155|unique:users',
+            'password' => 'required|string|min:8|max:50',
+            'phone' => 'required|string|min:8|max:50',
         ]);
-                
+        if(!$result)
+        {
+            return JsonController::return('error',400, 'Dados inválidos');
+        }
         try {
             $user = User::create([
-                'email' => $result['email'],
                 'name' => $result['name'],
-                'password' => bcrypt($result['password']),
-                'name_enterprise' => $result['name_enterprise'],
+                'enterprise' => $result['enterprise'],
+                'business' => $result['business'],
+                'segmentation' => 0,
+                'email' => $result['email'],
+                'password' => Hash::make($result['password']),
                 'phone' => $result['phone'],
-                'marketplace' => $result['marketplace']
+                'plan' => 0,
+                'is_admin' => 0,
             ]);
             $tokenResult = $user->createToken('JWT');
             return JsonController::return('success', 200, 'Usuário criado com sucesso', [
@@ -163,6 +176,7 @@ class AuthController extends Controller
                 DB::table('password_resets')->where('token', $result['token'])->delete();
                 return JsonController::return('success', 200, 'Senha alterada com sucesso');
             }
+            return JsonController::return('error', 401, 'Token inválido');
         } catch (\Exception $e) {
             return JsonController::return('error', 500, 'Erro ao alterar senha');
         }
