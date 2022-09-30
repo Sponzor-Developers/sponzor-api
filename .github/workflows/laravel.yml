@@ -8,7 +8,7 @@ on:
 
 jobs:
   laravel-tests:
-    name: Laravel Tests
+    name: Laravel Tests 🤖
     runs-on: ubuntu-latest
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
@@ -33,7 +33,7 @@ jobs:
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/phpunit
   build:
-    name: Deploy
+    name: Deploy 🚀
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,9 +48,3 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
-      - name: Update Composer and install dependencies
-        run: |
-          composer self-update
-          composer install --prefer-dist --no-progress --no-suggest
-      - name: Install NPM dependencies
-        run: npm install
