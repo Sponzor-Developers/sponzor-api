@@ -48,11 +48,9 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           EXCLUDE: "/dist/, /node_modules/, /src/, /tests/, /vendor/, /composer.json, /composer.lock, /package.json, /package-lock.json, /phpunit.xml, /README.md, /LICENSE, /.gitignore, /.gitattributes, /.github/, /.vscode/, /.editorconfig, /.env, /.env.example, /.env.testing, /.env.testing.example, /.php_cs, /.php_cs.cache, /.php_cs.dist, /.phpunit.result.cache, /.styleci.yml, /artisan, /server.php, /webpack.mix.js, /yarn.lock"
-      - name: Run composer install
-        uses: php-actions/composer@v7
-        with:
-          args: install --no-dev --optimize-autoloader
-      - name: Run npm install
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+      - name: Update Composer and install dependencies
+        run: |
+          composer self-update
+          composer install --prefer-dist --no-progress --no-suggest
+      - name: Install NPM dependencies
+        run: npm install
