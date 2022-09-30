@@ -7,8 +7,12 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\JsonController;
 
-Route::get('/', [HomeController::class, 'index']);
+
+Route::get('/', function () {
+    return JsonController::return('success', 200, 'Welcome to the API');
+});
 /**
  * Auth 
  */
