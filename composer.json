@@ -10,7 +10,6 @@
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "mercadopago/dx-php": "^2.4",
         "laravel/socialite": "^5.5"
     },
     "require-dev": {
