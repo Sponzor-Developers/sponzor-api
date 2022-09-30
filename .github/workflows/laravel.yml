@@ -47,7 +47,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
-          EXCLUDE: "/dist/, /node_modules/, /src/, /tests/, /vendor/, /composer.json, /composer.lock, /package.json, /package-lock.json, /phpunit.xml, /README.md, /LICENSE, /.gitignore, /.gitattributes, /.github/, /.vscode/, /.editorconfig, /.env, /.env.example, /.env.testing, /.env.testing.example, /.php_cs, /.php_cs.cache, /.php_cs.dist, /.phpunit.result.cache, /.styleci.yml, /artisan, /server.php, /webpack.mix.js, /yarn.lock"
       - name: Update Composer and install dependencies
         run: |
           composer self-update
