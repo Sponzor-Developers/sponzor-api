@@ -53,6 +53,6 @@ jobs:
       - name: Update Composer and install dependencies
         run: |
           composer self-update
-          composer install --prefer-dist --no-progress --no-suggest
+          composer install --prefer-dist --no-progress
       - name: Install NPM dependencies
         run: npm install
