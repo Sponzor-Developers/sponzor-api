@@ -36,36 +36,33 @@ Route::prefix('auth')->group(function () {
 Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], function () {
 
     /**
-     * DASHBOARD / MVP
+     * DASHBOARD / HOME
      */
 
-    Route::get('/', [DashboardController::class, 'mvp']);
-
-    Route::get('/reports', [DashboardController::class, 'mvp']);
+    Route::get('/', [DashboardController::class, 'index']); // DASHBOARD
+    Route::get('/event/{id}', [DashboardController::class, 'show']);  // EVENTO SELECIONADO
 
     /**
      * DASHBOARD / ADMIN
      */
     Route::prefix('admin')->group(function () {
-        Route::get('/users', [AdminController::class, 'getUsers']);
-        Route::get('/users/{id}', [AdminController::class, 'getUser']);
-        Route::post('/users', [AdminController::class, 'createUser']);
-        Route::put('/users/{id}', [AdminController::class, 'updateUser']);
-        Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
+        Route::get('/users', [AdminController::class, 'index']);
+        Route::post('/users', [AdminController::class, 'store']);
+        Route::get('/users/{id}', [AdminController::class, 'show']);
+        Route::put('/users/{id}', [AdminController::class, 'update']);
+        Route::delete('/users/{id}', [AdminController::class, 'destroy']);
     });
 
     /**
      * DASHBOARD / USER
      */
-
-    Route::get('/user', [UserController::class, 'getPerfil']); // INFO USER
-    Route::put('/user', [UserController::class, 'updatePerfil']); // UPDATE USER
-    Route::delete('/user', [UserController::class, 'deletePerfil']); // DELETE USER
+    Route::get('/user', [UserController::class, 'index']); // INFO USER
+    Route::put('/user', [UserController::class, 'update']); // UPDATE USER
+    Route::delete('/user', [UserController::class, 'destroy']); // DELETE USER
 
     /**
      * DASHBOARD / LEADS
      */
-
     Route::prefix('leads')->group(function () {
         Route::get('/leads', [UserController::class, 'getLeads']); // GET LEADS
         Route::get('/leads/{id}', [UserController::class, 'getLead']); // GET LEAD
