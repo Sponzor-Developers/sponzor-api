@@ -67,10 +67,7 @@ class AuthController extends Controller
      * @return string
      */
     public function register(Request $request)
-    {
-
-        // name, enterprise, business, email, password, phone, is_admin
-        
+    {        
         $result = $request->validate([
             'name' => 'required|string|min:3|max:155',
             'enterprise' => 'required|string|min:3|max:155',
@@ -196,51 +193,6 @@ class AuthController extends Controller
             return JsonController::return('success', 200, 'Logout realizado com sucesso');
         } catch (\Exception $e) {
             return JsonController::return('error', 500, 'Erro ao realizar logout');
-        }
-    }
-
-    /**
-     * Retorna o usuário logado
-     *
-     * @param Request $request
-     * @return string
-     */
-
-    public function user(Request $request)
-    {
-        try {
-            return JsonController::return('success', 200, 'Usuário retornado com sucesso', $request->user());
-        } catch (\Exception $e) {
-            return JsonController::return('error', 500, 'Erro ao retornar usuário');
-        }
-    }
-
-    /**
-     * Login com o Google com o Socialite
-     * @param Request $request
-     * @return string
-     */
-    public function loginGoogle(Request $request)
-    {
-        $result = $request->validate([
-            'token' => 'required|string|min:3|max:191',
-        ]);
-        try {
-            $user = Socialite::driver('google')->stateless()->userFromToken($result['token']);
-            $user = User::firstOrCreate([
-                'email' => $user->email
-            ], [
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => bcrypt(Str::random(10))
-            ]);
-            $token = $user->createToken('JWT')->plainTextToken;
-            return JsonController::return('success', 200, 'Login realizado com sucesso', [
-                'token' => $token,
-                'user' => $user
-            ]);
-        } catch (\Exception $e) {
-            return JsonController::return('error', 500, 'Erro ao realizar login');
         }
     }
 
