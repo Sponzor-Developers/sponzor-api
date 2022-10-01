@@ -13,10 +13,11 @@ use App\Http\Controllers\ReturnController;
 
 class UserController extends Controller
 {
-        /**
-     * Display a listing of the resource.
+    /**
+     * Lista informações do usuário
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function index(Request $request)
     {
@@ -24,11 +25,10 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza informações do usuário
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function update(Request $request)
     {
@@ -36,10 +36,10 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deleta usuário
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function destroy(Request $request)
     {
