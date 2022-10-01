@@ -23,9 +23,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::get('/reset/{token}', [AuthController::class, 'checkToken']);
     Route::post('/reset', [AuthController::class, 'resetPassword']); //
-    Route::get('/logout', [AuthController::class, 'logout']); // LOGOUT'
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::post('/logout', [AuthController::class, 'logout']); // LOGOUT
+        Route::get('/logout', [AuthController::class, 'logout']); // LOGOUT
     });
 });
 
