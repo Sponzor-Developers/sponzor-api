@@ -136,14 +136,17 @@ class AuthController extends Controller
     public function checkTokenResetPassword(Request $request)
     {
         $result = $request->validate([
-            'token' => 'required|string|min:3|max:191',
+            'token' => 'required|string|min:3|max:255',
         ]);
+        if(!$result)
+        {
+            return JsonController::return('error',400, 'Dados inválidos');
+        }
         try {
             $token = DB::table('password_resets')->where('token', $result['token'])->first();
             if ($token) {
                 return JsonController::return('success', 200, 'Token válido');
             }
-            
             return JsonController::return('error', 401, 'Token inválido');
         } catch (\Exception $e) {
             return JsonController::return('error', 500, 'Erro ao verificar token');
