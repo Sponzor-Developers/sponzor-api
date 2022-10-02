@@ -37,7 +37,7 @@ class AdminController extends Controller
         $data = $request->validate([
             'email' => 'string|email',
             'name' => 'string',
-            'company' => 'string',
+            'plan' => 'string',
         ]);
         if(!$data)
         {
@@ -48,15 +48,21 @@ class AdminController extends Controller
         ->select('users.*', 'plans.name as plan');
         foreach($data as $key => $value)
         {
-            if($value)
+            if($key == 'plan')
             {
-                $users->where($key, 'like', '%'.$value.'%');
+                $users = $users->where('plans.name', 'like', '%'.$value.'%');
+            }
+            else
+            {
+                $users = $users->where($key, 'like', '%'.$value.'%');
             }
         }
-        if(!$users->get()){
+        $users = $users->paginate(10);
+        if(!$users)
+        {
             return JsonController::return('error', 400, 'Nenhum usuário encontrado', ['users' => null]);
         }
-        return JsonController::return('success', 200, 'Listagem de usuários', ['users' => $users->get()]);
+        return JsonController::return('success', 200, 'Usuários listados com sucesso', ['users' => $users]);
     }
 
 
@@ -83,11 +89,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualizar usuário
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param string $id
+     * @return void
      */
     public function update(Request $request, string $id)
     {
@@ -173,7 +179,10 @@ class AdminController extends Controller
     }
 
     /**
-     * verficar se o plano é válido
+     * Plano é válido
+     *
+     * @param string $plan
+     * @return void
      */
     private function planIsValid(string $plan)
     {

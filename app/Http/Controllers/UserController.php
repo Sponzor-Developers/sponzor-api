@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\User;
-use App\Http\Controllers\ReturnController;
+use App\Http\Controllers\JsonController;
 
 
 
