@@ -50,6 +50,9 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
+        DB::table('personal_access_tokens')->where('tokenable_id', $request->user()->id)->delete();
+        DB::table('password_resets')->where('email', $request->user()->email)->delete();
+        DB::table('plans_person')->where('user_id', $request->user()->id)->delete();
         return JsonController::return('success', 200, 'Conta Excluida', ['user' => $request->user()->delete()]);
     }
 }
