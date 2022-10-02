@@ -4,36 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\JsonController;
+use SplDoublyLinkedList;
+use Illuminate\Support\Facades\DB;
+
 
 class DashboardController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Exibe todas as listas de eventos
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
-    {
-        $data = [
-            [
-                'id' => 1,
-                'name' => 'John Doe',
-                'email' => ''
-            ],
-        ];
-        
-
-        return JsonController::return('success', 200, 'Dashboard');
+    {        
+        // db select inner join events in categories type text example [1,2,3] and events_categories
+        $events = DB::table('events')->get();
+        return JsonController::return('success', 200, 'Dashboard' , ['events' => $events]);
     }
 
     /**
-     * Display the specified resource.
+     * Exibe o evento selecionado
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param [type] $id
+     * @return void
      */
     public function show($id)
     {
-        return JsonController::return('success', 200, 'Dashboard');
+        
+        return JsonController::return('success', 200, 'MVP', ['id' => $id]);
     }
 }

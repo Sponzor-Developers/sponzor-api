@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <table style="background:#0D0C10; color:#FFFFFF; padding:20px;">
         <tr>
@@ -82,12 +84,7 @@ font-size: 16px;
 line-height: 150%;
 letter-spacing: 0.2px;
 color: #E2E8F0;
-">Olá <span style="font-family: 'Inter', Arial;
-font-style: normal;
-font-weight: 700;
-font-size: 16px;
-letter-spacing: 0.2px;
-color: #FFFFFF;">{{$user->name}}</span> 👋</p>
+">Olá <span style="font-family: 'Inter', Arial;font-style: normal;font-weight: 700;font-size: 16px;letter-spacing: 0.2px;color: #FFFFFF;">{{$user->name}}</span> 👋</p>
             </td>
         </tr>
         <tr>

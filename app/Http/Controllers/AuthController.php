@@ -46,12 +46,9 @@ class AuthController extends Controller
         }
         try{
             if (Auth::attempt(['email' => $result['email'], 'password' => $result['password']], true)) {
-                $user = Auth::user();
-                $tokenResult = $user->createToken('JWT');
-
                 return JsonController::return('success', 200, 'Login realizado com sucesso', [
-                    'token' => $tokenResult->plainTextToken,
-                    'user' => $user
+                    'token' => Auth::user()->createToken('JWT')->plainTextToken,
+                    'user' => Auth::user()
                 ]);
             }
             return JsonController::return('error', 401, 'Usuário ou senha inválidos');
@@ -76,6 +73,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|max:50',
             'phone' => 'required|string|min:8|max:50',
         ]);
+        // retornar erro caso os dados não sejam válidos em json
         if(!$result)
         {
             return JsonController::return('error',400, 'Dados inválidos');
@@ -86,10 +84,9 @@ class AuthController extends Controller
                 'enterprise' => $result['enterprise'],
                 'business' => $result['business'],
                 'segmentation' => 0,
-                'email' => $result['email'],
-                'password' => Hash::make($result['password']),
                 'phone' => $result['phone'],
-                'plan' => 0,
+                'email' => $result['email'],
+                'password' => bcrypt($result['password']),
                 'is_admin' => 0,
             ]);
             $tokenResult = $user->createToken('JWT');
@@ -136,7 +133,7 @@ class AuthController extends Controller
      * @param Request $request
      * @return string
      */
-    public function checkToken(Request $request)
+    public function checkTokenResetPassword(Request $request)
     {
         $result = $request->validate([
             'token' => 'required|string|min:3|max:191',
@@ -146,6 +143,7 @@ class AuthController extends Controller
             if ($token) {
                 return JsonController::return('success', 200, 'Token válido');
             }
+            
             return JsonController::return('error', 401, 'Token inválido');
         } catch (\Exception $e) {
             return JsonController::return('error', 500, 'Erro ao verificar token');

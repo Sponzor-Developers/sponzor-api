@@ -20,8 +20,8 @@ class UserController extends Controller
      * @return void
      */
     public function index(Request $request)
-    {
-        return JsonController::return('success', 200, 'Profile', ['user' => $request->user()]);
+    {        
+        return JsonController::return('success', 200, 'Dados usuario', ['user' => $request->user()]);
     }
 
     /**
@@ -32,7 +32,14 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        return JsonController::return('success', 200, 'Profile updated', ['user' => $request->user()->update($request->all())]);
+        $data = $request->validate([
+            'email' => 'string|email|min:5|max:155',
+            'name' => 'string|max:255',
+            'enterprise' => 'string|max:255',
+            'business' => 'string|max:255',
+            'phone' => 'string|min:8|max:50',
+        ]);
+        return JsonController::return('success', 200, 'Dados atualizados', ['user' => DB::table('users')->where('id', $request->user()->id)->update($data)]);
     }
 
     /**
@@ -43,6 +50,6 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
-        return JsonController::return('success', 200, 'Profile deleted', ['user' => $request->user()->delete()]);
+        return JsonController::return('success', 200, 'Conta Excluida', ['user' => $request->user()->delete()]);
     }
 }
