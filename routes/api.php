@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], functi
      */
     Route::prefix('admin')->group(function () {
         Route::get('/users', [AdminController::class, 'index']);
+        Route::post('/users', [AdminController::class, 'filter']);
         Route::post('/user', [AdminController::class, 'store']);
         Route::get('/user/{id}', [AdminController::class, 'show']);
         Route::put('/user/{id}', [AdminController::class, 'update']);
