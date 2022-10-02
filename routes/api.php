@@ -8,7 +8,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\JsonController;
-
+use App\Http\Controllers\SegmentationController;
+use App\Http\Controllers\LeadsController;
 
 Route::get('/', function () {
     return JsonController::return('success', 200);
@@ -45,7 +46,8 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], functi
      * DASHBOARD / ADMIN
      */
     Route::prefix('admin')->group(function () {
-        Route::get('/users', [AdminController::class, 'index']);
+        Route::get('/', [AdminController::class, 'index']); // LISTAR USUÁRIOS
+        Route::get('/users', [AdminController::class, 'list']);
         Route::post('/users', [AdminController::class, 'filter']);
         Route::post('/user', [AdminController::class, 'store']);
         Route::get('/user/{id}', [AdminController::class, 'show']);
@@ -60,35 +62,25 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], functi
     Route::put('/user', [UserController::class, 'update']); // UPDATE USER
     Route::delete('/user', [UserController::class, 'destroy']); // DELETE USER
 
-    /**
-     * DASHBOARD / LEADS
-     */
-    Route::prefix('leads')->group(function () {
-        Route::get('/leads', [UserController::class, 'getLeads']); // GET LEADS
-        Route::get('/leads/{id}', [UserController::class, 'getLead']); // GET LEAD
-        /**
-         * DASHBOARD / LEADS / DOWNLOAD
-         */
-        // get all
-        Route::get('/leads/download', [UserController::class, 'downloadLeads']); // DOWNLOAD LEADS
-        // download all
-        Route::post('/leads/download/all', [UserController::class, 'downloadLeadsByIds']); // DOWNLOAD ALL LEADS
-        // download by ids
-        Route::post('/leads/download/selected', [UserController::class, 'downloadLeadsByIds']); // DOWNLOAD LEADS BY IDS
-    });
 
     /**
      * DASHBOARD / SEGMANTATION
      */
 
     Route::prefix('segmentation')->group(function () {
-        //QUOTES
-        Route::get('/', [UserController::class, 'getSegmentation']); // GET SEGMENTATION
+        Route::get('/', [SegmentationController::class, 'index']); // GET SEGMENTATION
+        Route::post('/filter', [SegmentationController::class, 'filter']); // GET FILTERS
+        Route::post('/save', [SegmentationController::class, 'save']); // SAVE SEGMENTATION
+    });
 
-        //filters
-        Route::post('/filters', [UserController::class, 'getFilters']); // GET FILTERS
 
-        // save segmentation
-        Route::post('/save', [UserController::class, 'saveSegmentation']); // SAVE SEGMENTATION
+        /**
+     * DASHBOARD / LEADS
+     */
+    Route::prefix('leads')->group(function () {
+        Route::get('/', [LeadsController::class, 'index']); // GET LEADS
+        Route::post('/filter', [LeadsController::class, 'filter']); // GET FILTERS
+        Route::post('/download', [LeadsController::class, 'download']); // DOWNLOAD LEADS
+        Route::post('/download/selected', [LeadsController::class, 'downloadSelected']); // DOWNLOAD LEADS BY IDS
     });
 });

@@ -34,10 +34,10 @@ class DashboardController extends Controller
      * @param [type] $id
      * @return void
      */
-    public function show($id)
+    public function show(Request $request, $slug)
     {
         
-        
-        return JsonController::return('success', 200, 'MVP', ['id' => $id]);
+
+        return JsonController::return('success', 200, 'MVP', ['event' => $slug]);
     }
 }

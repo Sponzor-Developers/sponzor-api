@@ -10,13 +10,18 @@ use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
 
+    public function index()
+    {
+        return JsonController::return('success', 200, "Todos os parametros", ['planos' => DB::table('plans')->get()]);
+    }
+
     /**
      * Lista todos os usuários
      *
      * @param Request $request
      * @return void
      */
-    public function index()
+    public function list()
     {
         return JsonController::return('success', 200, 'Usuários listados com sucesso', ['users' => DB::table('users')
         ->join('plans', 'users.plan', '=', 'plans.id')
@@ -85,7 +90,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        return JsonController::return('success', 200, 'User', ['user' => DB::table('users')->where('id', $id)->first()]);
+        return JsonController::return('success', 200, 'User', ['user' => DB::table('users')->where('id', $id)->first(), 'plans' => DB::table('plans')->get()]);
     }
 
     /**
