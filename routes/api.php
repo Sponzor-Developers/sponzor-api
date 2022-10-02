@@ -11,7 +11,7 @@ use App\Http\Controllers\JsonController;
 
 
 Route::get('/', function () {
-    return JsonController::return('success', 200, 'Welcome to the API');
+    return JsonController::return('success', 200);
 });
 /**
  * Auth 
@@ -20,9 +20,9 @@ Route::get('/', function () {
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']); // REGISTER
     Route::post('/login', [AuthController::class, 'login']); // LOGIN
-    Route::post('/change-password', [AuthController::class, 'changePassword']);
-    Route::get('/reset/{token}', [AuthController::class, 'checkToken']);
-    Route::post('/reset', [AuthController::class, 'resetPassword']); //
+    Route::post('/change-password', [AuthController::class, 'resetPassword']); // ENVIAR EMAIL PARA ALTERAR SENHA
+    Route::post('/check-reset', [AuthController::class, 'checkTokenResetPassword']); // CONFIRMA SE O TOKEN DE ALTERAÇÃO DE SENHA É VÁLIDO
+    Route::post('/reset', [AuthController::class, 'changePassword']);  // ALTERAR SENHA
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/logout', [AuthController::class, 'logout']); // LOGOUT
     });
@@ -39,17 +39,17 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], functi
      */
 
     Route::get('/', [DashboardController::class, 'index']); // DASHBOARD
-    Route::get('/event/{id}', [DashboardController::class, 'show']);  // EVENTO SELECIONADO
+    Route::get('/event/{slug}', [DashboardController::class, 'show']);  // EVENTO SELECIONADO
 
     /**
      * DASHBOARD / ADMIN
      */
     Route::prefix('admin')->group(function () {
         Route::get('/users', [AdminController::class, 'index']);
-        Route::post('/users', [AdminController::class, 'store']);
-        Route::get('/users/{id}', [AdminController::class, 'show']);
-        Route::put('/users/{id}', [AdminController::class, 'update']);
-        Route::delete('/users/{id}', [AdminController::class, 'destroy']);
+        Route::post('/user', [AdminController::class, 'store']);
+        Route::get('/user/{id}', [AdminController::class, 'show']);
+        Route::put('/user/{id}', [AdminController::class, 'update']);
+        Route::delete('/user/{id}', [AdminController::class, 'destroy']);
     });
 
     /**
