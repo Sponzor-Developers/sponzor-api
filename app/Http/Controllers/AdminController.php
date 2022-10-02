@@ -9,21 +9,62 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Lista todos os usuários
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function index()
     {
-        return JsonController::return('success', 200, 'Listagem de usuários', ['users' => DB::table('users')->get()]);
+        return JsonController::return('success', 200, 'Usuários listados com sucesso', ['users' => DB::table('users')
+        ->join('plans', 'users.plan', '=', 'plans.id')
+        ->select('users.*', 'plans.name as plan')
+        ->paginate(10)]);        
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Filtra os usuários
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
+     */
+     
+    public function filter(Request $request)
+    {
+        // emal, nome, cota e empresa
+        $data = $request->validate([
+            'email' => 'string|email',
+            'name' => 'string',
+            'company' => 'string',
+        ]);
+        if(!$data)
+        {
+            return JsonController::return('error', 400, 'Dados inválidos', ['users' => null]);
+        }
+        $users = DB::table('users')
+        ->join('plans', 'users.plan', '=', 'plans.id')
+        ->select('users.*', 'plans.name as plan');
+        foreach($data as $key => $value)
+        {
+            if($value)
+            {
+                $users->where($key, 'like', '%'.$value.'%');
+            }
+        }
+        if(!$users->get()){
+            return JsonController::return('error', 400, 'Nenhum usuário encontrado', ['users' => null]);
+        }
+        return JsonController::return('success', 200, 'Listagem de usuários', ['users' => $users->get()]);
+    }
+
+
+    /**
+     * Inseri usuário
+     *
+     * @param Request $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -31,10 +72,10 @@ class AdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Lista informações do usuário
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function show($id)
     {
