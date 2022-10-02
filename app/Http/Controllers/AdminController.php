@@ -12,7 +12,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return JsonController::return('success', 200, "Todos os parametros", ['planos' => DB::table('plans')->get()]);
+        return JsonController::return('success', 200, "Todos os parametros", ['planos' => DB::table('plans')->get(), 'users' => DB::table('users')->count()]);
     }
 
     /**
