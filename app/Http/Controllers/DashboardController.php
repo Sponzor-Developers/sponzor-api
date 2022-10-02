@@ -18,9 +18,14 @@ class DashboardController extends Controller
      */
     public function index()
     {        
-        // db select inner join events in categories type text example [1,2,3] and events_categories
         $events = DB::table('events')->get();
-        return JsonController::return('success', 200, 'Dashboard' , ['events' => $events]);
+        // jsondecode $events['categories]
+        foreach($events as $event)
+        {
+            $event->categories = json_decode($event->categories);
+        }
+        $events_categories = DB::table('events_categories')->get();
+        return JsonController::return('success', 200, 'Listagem de eventos', ['categories' => $events_categories, 'events' => $events]);
     }
 
     /**
@@ -31,6 +36,7 @@ class DashboardController extends Controller
      */
     public function show($id)
     {
+        
         
         return JsonController::return('success', 200, 'MVP', ['id' => $id]);
     }
