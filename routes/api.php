@@ -78,9 +78,10 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'dashboard'], functi
      * DASHBOARD / LEADS
      */
     Route::prefix('leads')->group(function () {
-        Route::get('/', [LeadsController::class, 'index']); // GET LEADS
+        Route::get('/', [LeadsController::class, 'index']); // GET PARAMETROS
+        Route::get('/list', [LeadsController::class, 'list']); // GET LEADS
         Route::post('/filter', [LeadsController::class, 'filter']); // GET FILTERS
-        Route::post('/download', [LeadsController::class, 'download']); // DOWNLOAD LEADS
+        Route::get('/download', [LeadsController::class, 'downloadAll']); // DOWNLOAD LEADS
         Route::post('/download/selected', [LeadsController::class, 'downloadSelected']); // DOWNLOAD LEADS BY IDS
     });
 });

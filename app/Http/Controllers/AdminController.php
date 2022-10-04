@@ -42,7 +42,7 @@ class AdminController extends Controller
         $data = $request->validate([
             'email' => 'string|email',
             'name' => 'string',
-            'plan' => 'string',
+            'plan' => 'numeric',
         ]);
         if(!$data)
         {

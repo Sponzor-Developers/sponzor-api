@@ -119,7 +119,17 @@ class AuthController extends Controller
                     'token' => $token,
                     'created_at' => now()
                 ]);
-                Mail::to($user->email)->send(new SendMail($token));
+                $email = Mail::send('emails.reset', [
+                    'user' => $user,
+                    'link' => 'https://app.sponzor.io/redefinir-senha/'.$token,                    
+                ], function ($message) use($user) {
+                    $message->from('contato@sponzor.io', 'Sponzor');
+                    $message->to($user->email, $user->name);
+                    $message->subject('Recuperação de senha');
+                });
+                if(!$email){
+                    return response()->json(['success' => false, 'response' => 'Erro ao enviar email'], 500);
+                }
                 return JsonController::return('success', 200, 'Email enviado com sucesso');
             }
             return JsonController::return('error', 401, 'Email não encontrado');
@@ -171,6 +181,7 @@ class AuthController extends Controller
                 $user = User::where('email', DB::table('password_resets')->where('token', $result['token'])->first()->email)->first();
                 $user->password = bcrypt($result['password']);
                 $user->save();
+                
                 DB::table('password_resets')->where('token', $result['token'])->delete();
                 return JsonController::return('success', 200, 'Senha alterada com sucesso');
             }

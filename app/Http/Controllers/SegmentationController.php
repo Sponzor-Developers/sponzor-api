@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JsonController;
+use App\Http\Controllers\ActiveCampaningController;
 
 
 class SegmentationController extends Controller
@@ -25,6 +26,13 @@ class SegmentationController extends Controller
         {
             return JsonController::return('error', 400, 'Você já possui uma segmentação');
         }
+
+        $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
+
+        $fields = (new ActiveCampaningController)->getFields();
+        
+
+
         // verifica se o plano permite segmentação
         if($plan == 6)
         {
@@ -43,13 +51,10 @@ class SegmentationController extends Controller
                 'quota' => $range, 
                 'min' => $min, 
                 'max' => $max, 
-                'total_leads' => $leads
+                'fields' => $fields
             ]);
         }
-        $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
-        
-
-        return JsonController::return('success', 200, '', ['quota' => $custom->quota, 'segmentation' => $segmentation, 'plan' => 'Personalizado']);
+        return JsonController::return('success', 200, '', ['quota' => $custom->quota, 'segmentation' => $segmentation, 'plan' => 'Personalizado', 'fields' => $fields]);
     }
 
     /**
@@ -58,7 +63,7 @@ class SegmentationController extends Controller
 
     public function filter(Request $request)
     {
-
+          
     }
 
     /**
@@ -66,6 +71,25 @@ class SegmentationController extends Controller
      */
     public function save(Request $request)
     {
-        
+        $data = $request->validate([
+            'leads' => 'required|array',
+            'leads.*' => 'required|integer',
+        ]);
+        if(!$data)
+        {
+            return JsonController::return('error', 400, 'Dados inválidos');
+        }
+        // mudar o segmentação para 1
+        $user = $request->user();
+        $user->segmentation = 1;
+        $user->save();
+        // salvar os leads
+        $leads = $data['leads'];
+        DB::table('leads')->insert([
+            'user_id' => $user->id,
+            'event_id' => 1,
+            'leads' => json_encode($leads, JSON_NUMERIC_CHECK)
+        ]);
+        return JsonController::return('success', 200, 'Segmentação salva com sucesso');
     }
 }

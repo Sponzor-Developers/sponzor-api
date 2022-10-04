@@ -36,8 +36,6 @@ class DashboardController extends Controller
      */
     public function show(Request $request, $slug)
     {
-        
-
         return JsonController::return('success', 200, 'MVP', ['event' => $slug]);
     }
 }

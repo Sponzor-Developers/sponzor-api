@@ -32,11 +32,10 @@ class SendMail extends Mailable
      */
     public function build()
     {
-        $this->subject('Seu pagamento foi confirmado!');
+        $this->subject('Recuperar senha');
         $this->to($this->user->email, $this->user->name);
         return $this->view('emails.sendmail', [
             'user' => $this->user,
-            // 'account' => $this->account,
         ]);
     }
 }

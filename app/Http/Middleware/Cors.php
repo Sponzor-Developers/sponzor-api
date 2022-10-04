@@ -20,6 +20,7 @@ class Cors
         //Acrescente as 3 linhas abaixo
         ->header('Access-Control-Allow-Origin', "*")
         ->header('Access-Control-Allow-Methods', "PUT, POST, DELETE, GET, OPTIONS")
-        ->header('Access-Control-Allow-Headers', "Accept, Authorization, Content-Type");
+        ->header('Access-Control-Allow-Headers', "Content-Type, Accept, Authorization, X-Requested-With, Application")
+        ->header('Content-Type', 'application/json');
     }
 }
