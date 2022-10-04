@@ -136,6 +136,23 @@ class ActiveCampaningController extends Controller
         return null;
     }
 
-
-
-}
+    /**
+     * GET CONTACTS BY LISTS
+     */
+    public function getContactsByLists(int $listId)
+    {
+        $response = Http::withHeaders([
+            'Api-Token' => $this->api_token
+        ])->get($this->api_url . '/lists/' . $listId . '/contacts?limit=2147483647');
+        if($response->status() == 200)
+        {
+            $body = $response->json()['contacts'];
+            $contacts = [];
+            foreach($body as $contact)
+            {
+                $contacts[] = $contact['id'];
+            }
+            return $contacts;
+        }
+        return null;
+    }

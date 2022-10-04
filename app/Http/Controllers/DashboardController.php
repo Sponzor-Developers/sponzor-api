@@ -36,6 +36,13 @@ class DashboardController extends Controller
      */
     public function show(Request $request, $slug)
     {
+        $event = DB::table('events')->where('slug', $slug)->first();
+        if(!$event)
+        {
+            return JsonController::return('error', 400, 'Evento não encontrado');
+        }
+        
+
         return JsonController::return('success', 200, 'MVP', ['event' => $slug]);
     }
 }

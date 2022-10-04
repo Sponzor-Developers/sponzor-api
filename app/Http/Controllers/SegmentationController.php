@@ -22,12 +22,18 @@ class SegmentationController extends Controller
         $user = $request->user();
         $plan = $user->plan;
         $segmentation = $user->segmentation == 1 ? true : false;
+
         if($segmentation)
         {
             return JsonController::return('error', 400, 'Você já possui uma segmentação');
         }
 
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
+
+
+        $response = Http::withHeaders([
+            'Api-Token' => $this->api_token
+        ])->get($this->api_url . '/lists/' . $listId . '/contacts?limit=2147483647');
 
         $fields = (new ActiveCampaningController)->getFields();
         
@@ -54,7 +60,13 @@ class SegmentationController extends Controller
                 'fields' => $fields
             ]);
         }
-        return JsonController::return('success', 200, '', ['quota' => $custom->quota, 'segmentation' => $segmentation, 'plan' => 'Personalizado', 'fields' => $fields]);
+        return JsonController::return('success', 200, '', 
+        [
+            'quota' => $custom->quota, 
+            'min' => $custom->quota, 
+            'max' => $custom->quota, 
+            'fields' => $fields
+        ]);
     }
 
     /**
@@ -63,7 +75,23 @@ class SegmentationController extends Controller
 
     public function filter(Request $request)
     {
-          
+        // cargo,departamento,segmento,tamanho,pais e interações
+        $data = $request->validate([
+            'cargo' => 'string',
+            'departamento' => 'string',
+            'segmento' => 'string',
+            'tamanho' => 'string',
+            'pais' => 'string',
+            'interacoes' => 'string',
+        ]);
+        if(!$data)
+        {
+            return JsonController::return('error', 400, 'Dados inválidos');
+        }
+
+
+        
+
     }
 
     /**
