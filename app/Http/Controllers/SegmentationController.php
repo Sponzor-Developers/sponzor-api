@@ -22,11 +22,21 @@ class SegmentationController extends Controller
         $plan = $user->plan;
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
         $fields = [];
-        $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo') ?? [];
-        $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento') ?? [];
-        $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento') ?? [];
-        $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho') ?? [];
-        $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais') ?? [];
+        $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo')->map(function($item, $key){
+            return $item->cargo;
+        }) ?? [];
+        $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento')->map(function($item, $key){
+            return $item->departamento;
+        }) ?? [];
+        $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento')->map(function($item, $key){
+            return $item->segmento;
+        }) ?? [];
+        $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho')->map(function($item, $key){
+            return $item->tamanho;
+        }) ?? [];
+        $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais')->map(function($item, $key){
+            return $item->pais;
+        }) ?? [];
 
         if($plan != 5)
         {
