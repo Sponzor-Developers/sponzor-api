@@ -23,11 +23,11 @@ class SegmentationController extends Controller
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
         $fields = [];
         $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo')->map(function($item, $key){
-            if($item->cargo != null)
-            {
+            if($item->cargo != null){
                 return $item->cargo;
             }
-        }) ?? [];
+        })->filter()->values() ?? [];
+
         $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento')->map(function($item, $key){
             if($item->departamento != null)
             {
@@ -39,19 +39,22 @@ class SegmentationController extends Controller
             {
                 return $item->segmento;
             }
-        }) ?? [];
+        })->filter()->values() ?? [];
+
         $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho')->map(function($item, $key){
             if($item->tamanho != null)
             {
                 return $item->tamanho;
             }
-        }) ?? [];
+        })->filter()->values() ?? [];
+
         $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais')->map(function($item, $key){
             if($item->pais != null)
             {
                 return $item->pais;
             }
-        }) ?? [];
+        })->filter()->values() ?? [];
+
 
         if($plan != 5)
         {
