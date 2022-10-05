@@ -106,7 +106,7 @@ class SegmentationController extends Controller
         {
             if($value)
             {
-                $contacts->whereNotIn($key, $value);
+                $contacts->whereIn($key, $value);
             }
         }
 
