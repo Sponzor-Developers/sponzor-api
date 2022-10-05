@@ -49,7 +49,23 @@ class SegmentationController extends Controller
 
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
 
-        $fields = (new ActiveCampaningController)->getFields();
+
+        $fields = [];
+        $fields['cargo'] = DB::table('contacts')->where('user_id', $user->id)->where('cargo', '!=', '')->distinct()->pluck('cargo');
+        $fields['departamento'] = DB::table('contacts')->where('user_id', $user->id)->where('departamento', '!=', '')->distinct()->pluck('departamento');
+        $fields['segmento'] = DB::table('contacts')->where('user_id', $user->id)->where('segmento', '!=', '')->distinct()->pluck('segmento');
+        $fields['tamanhoEmpresa'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanhoEmpresa', '!=', '')->distinct()->pluck('tamanhoEmpresa');
+        $fields['pais'] = DB::table('contacts')->where('user_id', $user->id)->where('pais', '!=', '')->distinct()->pluck('pais');
+
+        // \
+
+    
+
+
+
+        // $fields = (new ActiveCampaningController)->getFields();
+
+
 
         // verifica se o plano permite segmentação
 

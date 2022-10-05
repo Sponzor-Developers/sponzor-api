@@ -21,24 +21,6 @@ class ActiveCampaningController extends Controller
         $this->api_url = config('services.activecampaning.api_url');
         $this->api_token = config('services.activecampaning.api_token');
     }
- 
-
-    public function infoEvent()
-    {
-        // $response = Http::withHeaders([
-        //     'Api-Token' => $this->api_token
-        // ])->get($this->api_url . '/contacts', [
-        //     'listid' => 53
-        // ]);
-
-
-
-        
-
-
-    }
-
-
 
     /**
      * Exibir um contato via id
