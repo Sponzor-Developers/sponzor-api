@@ -42,7 +42,7 @@ class AdminController extends Controller
         $data = $request->validate([
             'email' => 'string|email',
             'name' => 'string',
-            'plan' => 'numeric',
+            'plan' => 'string',
         ]);
         if(!$data)
         {
@@ -53,14 +53,19 @@ class AdminController extends Controller
         ->select('users.*', 'plans.name as plan');
         foreach($data as $key => $value)
         {
+            if($key == 'name')
+            {
+                $users = $users->where('users.name', 'like', '%'.$value.'%');
+            }
+            if($key == 'email')
+            {
+                $users = $users->where('users.email', 'like', '%'.$value.'%');
+            }
             if($key == 'plan')
             {
-                $users = $users->where('plans.name', 'like', '%'.$value.'%');
+                $users = $users->where('users.plan', '=', $value);
             }
-            else
-            {
-                $users = $users->where($key, 'like', '%'.$value.'%');
-            }
+            
         }
         $users = $users->paginate(10);
         if(!$users)
@@ -89,8 +94,9 @@ class AdminController extends Controller
      * @return void
      */
     public function show($id)
-    {
-        return JsonController::return('success', 200, 'User', ['user' => DB::table('users')->where('id', $id)->first(), 'plans' => DB::table('plans')->get()]);
+    {;
+        $cota = DB::table('plans_person')->where('user_id', $id)->first()->quota ?? 0;
+        return JsonController::return('success', 200, 'User', ['user' => DB::table('users')->where('id', $id)->first(), 'plans' => DB::table('plans')->get(), 'cota' => intval($cota)]);
     }
 
     /**
@@ -109,7 +115,7 @@ class AdminController extends Controller
             'enterprise' => 'string|min:3|max:155',
             'business' => 'string|min:3|max:155',
             'plan' => 'string',
-            'quota' => 'string',
+            'quota' => 'integer',
             'phone' => 'string|min:8|max:50',
         ]);
         // se houver erro de validação, retorna o erro
@@ -121,11 +127,7 @@ class AdminController extends Controller
         {
             if($request['plan'] != '6')
             {
-                $delete = DB::table('plans_person')->where('user_id', $id)->delete();
-                if(!$delete)
-                {
-                    return JsonController::return('error', 400, 'Erro ao atualizar quota');
-                }
+                DB::table('plans_person')->where('user_id', $id)->delete();
             }
             $this->planIsValid($request['plan']);
             if($request['plan'] == '6' && !isset($request['quota']))

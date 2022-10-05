@@ -22,6 +22,24 @@ class ActiveCampaningController extends Controller
         $this->api_token = config('services.activecampaning.api_token');
     }
  
+
+    public function infoEvent()
+    {
+        // $response = Http::withHeaders([
+        //     'Api-Token' => $this->api_token
+        // ])->get($this->api_url . '/contacts', [
+        //     'listid' => 53
+        // ]);
+
+
+
+        
+
+
+    }
+
+
+
     /**
      * Exibir um contato via id
      * 
@@ -31,7 +49,8 @@ class ActiveCampaningController extends Controller
         $response = Http::withHeaders([
             'Api-Token' => $this->api_token
         ])->get($this->api_url . '/contacts', [
-            'ids' => $ids
+            'ids' => $ids,
+            'listid' => 53
         ]);
         if($response->status() == 200)
         {
@@ -74,6 +93,7 @@ class ActiveCampaningController extends Controller
         return null;
     }
 
+
     /**
      * Páginação
      * 
@@ -103,7 +123,11 @@ class ActiveCampaningController extends Controller
     {
         $response = Http::withHeaders([
             'Api-Token' => $this->api_token
-        ])->get($this->api_url . '/fields?limit=2147483647');
+        ])->get($this->api_url . '/fields',[
+            'limit' => 2147483647
+        ]);
+        
+
         if($response->status() == 200)
         {
             $body = $response->json()['fieldOptions'];
@@ -143,7 +167,10 @@ class ActiveCampaningController extends Controller
     {
         $response = Http::withHeaders([
             'Api-Token' => $this->api_token
-        ])->get($this->api_url . '/lists/' . $listId . '/contacts?limit=2147483647');
+        ])->get($this->api_url . '/lists/' . $listId . '/contacts',
+        [
+            'limit' => 2147483647
+        ]);
         if($response->status() == 200)
         {
             $body = $response->json()['contacts'];
@@ -156,3 +183,6 @@ class ActiveCampaningController extends Controller
         }
         return null;
     }
+
+
+}

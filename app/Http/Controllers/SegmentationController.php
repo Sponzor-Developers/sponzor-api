@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JsonController;
 use App\Http\Controllers\ActiveCampaningController;
+use Illuminate\Support\Facades\Http;
+
 
 
 class SegmentationController extends Controller
@@ -30,11 +32,6 @@ class SegmentationController extends Controller
 
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
 
-
-        $response = Http::withHeaders([
-            'Api-Token' => $this->api_token
-        ])->get($this->api_url . '/lists/' . $listId . '/contacts?limit=2147483647');
-
         $fields = (new ActiveCampaningController)->getFields();
         
 
@@ -48,13 +45,13 @@ class SegmentationController extends Controller
         if($plan != 5)
         {
             $plan = DB::table('plans')->where('id', $plan)->first();
-            $leads = 10000;
+            $leads = DB::table('contacts')->count();
             $range = $leads * $plan->quota / 100;
             $min = round($range * 0.90);
             $max = round($range * 1.10);
             return JsonController::return('success', 200, '', 
             [
-                'quota' => $range, 
+                'quota' => round($range), 
                 'min' => $min, 
                 'max' => $max, 
                 'fields' => $fields
@@ -77,22 +74,45 @@ class SegmentationController extends Controller
     {
         // cargo,departamento,segmento,tamanho,pais e interações
         $data = $request->validate([
-            'cargo' => 'string',
-            'departamento' => 'string',
-            'segmento' => 'string',
-            'tamanho' => 'string',
-            'pais' => 'string',
-            'interacoes' => 'string',
+            'cargo' => 'array',
+            'departamento' => 'array',
+            'segmento' => 'array',
+            'tamanho' => 'array',
+            'pais' => 'array',
+            'interacoes' => 'array',
         ]);
         if(!$data)
         {
             return JsonController::return('error', 400, 'Dados inválidos');
         }
+        $contacts = DB::table('contacts');
 
+        // fazer um foraech de data e fazer um where in
+        foreach($data as $key => $value)
+        {
+            if($value)
+            {
+                $contacts->whereNotIn($key, $value);
+            }
+        }
 
-        
-
+        // retorna a quantidade de contatos
+        $contacts = $contacts->get('id');
+        $total = count($contacts);
+        $ids = [];
+        foreach($contacts as $contact)
+        {
+            $ids[] = $contact->id;
+        }
+        return JsonController::return('success', 200, '', ['total' => $total, 'leads' => $ids]);
     }
+
+
+
+
+
+
+
 
     /**
      * Save
