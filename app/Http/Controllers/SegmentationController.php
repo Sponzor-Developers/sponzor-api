@@ -22,11 +22,11 @@ class SegmentationController extends Controller
         $plan = $user->plan;
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
         $fields = [];
-        $fields['cargo'] = DB::table('contacts')->where('user_id', $user->id)->where('cargo', '!=', '')->distinct()->pluck('cargo') ?? [];
-        $fields['departamento'] = DB::table('contacts')->where('user_id', $user->id)->where('departamento', '!=', '')->distinct()->pluck('departamento') ?? [];
-        $fields['segmento'] = DB::table('contacts')->where('user_id', $user->id)->where('segmento', '!=', '')->distinct()->pluck('segmento') ?? [];
-        $fields['tamanho'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanho', '!=', '')->distinct()->pluck('tamanho') ?? [];
-        $fields['pais'] = DB::table('contacts')->where('user_id', $user->id)->where('pais', '!=', '')->distinct()->pluck('pais') ?? [];
+        $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo') ?? [];
+        $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento') ?? [];
+        $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento') ?? [];
+        $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho') ?? [];
+        $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais') ?? [];
 
         if($plan != 5)
         {
