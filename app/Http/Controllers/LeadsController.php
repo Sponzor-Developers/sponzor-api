@@ -13,8 +13,41 @@ class LeadsController extends Controller
     
     public function index(Request $request)
     {
-        $result = (new ActiveCampaningController)->getFields(); 
-        return JsonController::return('success', 200, '', $result);
+        $fields = [];
+        $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo')->map(function($item, $key){
+            if($item->cargo != null){
+                return $item->cargo;
+            }
+        })->filter()->values() ?? [];
+
+        $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento')->map(function($item, $key){
+            if($item->departamento != null)
+            {
+                return $item->departamento;
+            }
+        })->filter()->values() ?? [];
+        $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento')->map(function($item, $key){
+            if($item->segmento != null)
+            {
+                return $item->segmento;
+            }
+        })->filter()->values() ?? [];
+
+        $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho')->map(function($item, $key){
+            if($item->tamanho != null)
+            {
+                return $item->tamanho;
+            }
+        })->filter()->values() ?? [];
+
+        $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais')->map(function($item, $key){
+            if($item->pais != null)
+            {
+                return $item->pais;
+            }
+        })->filter()->values() ?? [];
+
+        return JsonController::return('success', 200, '', $fields);
     }
 
     public function list(Request $request)
