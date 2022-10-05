@@ -24,50 +24,13 @@ class SegmentationController extends Controller
         // verifica o plano do usuário
         $user = $request->user();
         $plan = $user->plan;
-        // if($plan == 6)
-        // {
-        //     return JsonController::return('error', 400, 'Seu plano não permite segmentação', [
-        //         'quota' => 0, 
-        //         'min' => 0, 
-        //         'max' => 0, 
-        //         'fields' => []
-        //     ]);
-        // }
-
-
-        $segmentation = $user->segmentation == 1 ? true : false;
-
-        // if($segmentation)
-        // {
-        //     return JsonController::return('error', 400, 'Você já possui uma segmentação', [
-        //         'quota' => 0, 
-        //         'min' => 0, 
-        //         'max' => 0, 
-        //         'fields' => []
-        //     ]);
-        // }
-
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
-
-
         $fields = [];
         $fields['cargo'] = DB::table('contacts')->where('user_id', $user->id)->where('cargo', '!=', '')->distinct()->pluck('cargo');
         $fields['departamento'] = DB::table('contacts')->where('user_id', $user->id)->where('departamento', '!=', '')->distinct()->pluck('departamento');
         $fields['segmento'] = DB::table('contacts')->where('user_id', $user->id)->where('segmento', '!=', '')->distinct()->pluck('segmento');
-        $fields['tamanhoEmpresa'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanhoEmpresa', '!=', '')->distinct()->pluck('tamanhoEmpresa');
+        $fields['tamanho'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanho', '!=', '')->distinct()->pluck('tamanho');
         $fields['pais'] = DB::table('contacts')->where('user_id', $user->id)->where('pais', '!=', '')->distinct()->pluck('pais');
-
-        // \
-
-    
-
-
-
-        // $fields = (new ActiveCampaningController)->getFields();
-
-
-
-        // verifica se o plano permite segmentação
 
         if($plan != 5)
         {
