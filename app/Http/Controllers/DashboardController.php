@@ -77,6 +77,17 @@ class DashboardController extends Controller
         });
         $empresas = $empresas->toArray();
         $empresas = array_slice($empresas, 0, 10);
-        return JsonController::return('success', 200, 'MVP', ['slug' => $slug, 'event' => $event, 'total_leads' => $leads, 'tamanho_empresa' => $sizeEnterprise, 'segmentos' => $segments, 'empresas' => $empresas]);
+
+        $departamentos = DB::table('contacts')->select('departamento')->distinct()->get('departamento') ?? [];
+        $departamentos = $departamentos->map(function($item, $key){
+            return $item->departamento;
+        });
+
+        $cargos = DB::table('contacts')->select('cargo')->distinct()->get('cargo') ?? [];
+        $cargos = $cargos->map(function($item, $key){
+            return $item->cargo;
+        });
+
+        return JsonController::return('success', 200, 'MVP', ['slug' => $slug, 'event' => $event, 'total_leads' => $leads, 'tamanho_empresa' => $sizeEnterprise, 'segmentos' => $segments, 'empresas' => $empresas, 'departamentos' => $departamentos, 'cargos' => $cargos]);
     }
 }
