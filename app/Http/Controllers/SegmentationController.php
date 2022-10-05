@@ -20,22 +20,32 @@ class SegmentationController extends Controller
      */
     public function index(Request $request)
     {
+
         // verifica o plano do usuário
         $user = $request->user();
         $plan = $user->plan;
-
-        if($plan == 6)
-        {
-            return JsonController::return('error', 400, 'Seu plano não permite segmentação');
-        }
+        // if($plan == 6)
+        // {
+        //     return JsonController::return('error', 400, 'Seu plano não permite segmentação', [
+        //         'quota' => 0, 
+        //         'min' => 0, 
+        //         'max' => 0, 
+        //         'fields' => []
+        //     ]);
+        // }
 
 
         $segmentation = $user->segmentation == 1 ? true : false;
 
-        if($segmentation)
-        {
-            return JsonController::return('error', 400, 'Você já possui uma segmentação');
-        }
+        // if($segmentation)
+        // {
+        //     return JsonController::return('error', 400, 'Você já possui uma segmentação', [
+        //         'quota' => 0, 
+        //         'min' => 0, 
+        //         'max' => 0, 
+        //         'fields' => []
+        //     ]);
+        // }
 
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
 
@@ -122,7 +132,7 @@ class SegmentationController extends Controller
     {
         $data = $request->validate([
             'leads' => 'required|array',
-            'leads.*' => 'required|integer',
+            'leads.*' => 'required|string',
         ]);
         if(!$data)
         {
