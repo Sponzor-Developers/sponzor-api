@@ -23,6 +23,13 @@ class SegmentationController extends Controller
         // verifica o plano do usuário
         $user = $request->user();
         $plan = $user->plan;
+
+        if($plan == 6)
+        {
+            return JsonController::return('error', 400, 'Seu plano não permite segmentação');
+        }
+
+
         $segmentation = $user->segmentation == 1 ? true : false;
 
         if($segmentation)
@@ -33,14 +40,8 @@ class SegmentationController extends Controller
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
 
         $fields = (new ActiveCampaningController)->getFields();
-        
-
 
         // verifica se o plano permite segmentação
-        if($plan == 6)
-        {
-            return JsonController::return('error', 400, 'Seu plano não permite segmentação');
-        }
 
         if($plan != 5)
         {
