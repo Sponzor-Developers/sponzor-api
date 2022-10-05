@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JsonController;
-use App\Http\Controllers\ActiveCampaningController;
-use Illuminate\Support\Facades\Http;
-
 
 
 class SegmentationController extends Controller
@@ -21,16 +18,15 @@ class SegmentationController extends Controller
     public function index(Request $request)
     {
 
-        // verifica o plano do usuário
         $user = $request->user();
         $plan = $user->plan;
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
         $fields = [];
-        $fields['cargo'] = DB::table('contacts')->where('user_id', $user->id)->where('cargo', '!=', '')->distinct()->pluck('cargo');
-        $fields['departamento'] = DB::table('contacts')->where('user_id', $user->id)->where('departamento', '!=', '')->distinct()->pluck('departamento');
-        $fields['segmento'] = DB::table('contacts')->where('user_id', $user->id)->where('segmento', '!=', '')->distinct()->pluck('segmento');
-        $fields['tamanho'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanho', '!=', '')->distinct()->pluck('tamanho');
-        $fields['pais'] = DB::table('contacts')->where('user_id', $user->id)->where('pais', '!=', '')->distinct()->pluck('pais');
+        $fields['cargo'] = DB::table('contacts')->where('user_id', $user->id)->where('cargo', '!=', '')->distinct()->pluck('cargo') ?? [];
+        $fields['departamento'] = DB::table('contacts')->where('user_id', $user->id)->where('departamento', '!=', '')->distinct()->pluck('departamento') ?? [];
+        $fields['segmento'] = DB::table('contacts')->where('user_id', $user->id)->where('segmento', '!=', '')->distinct()->pluck('segmento') ?? [];
+        $fields['tamanho'] = DB::table('contacts')->where('user_id', $user->id)->where('tamanho', '!=', '')->distinct()->pluck('tamanho') ?? [];
+        $fields['pais'] = DB::table('contacts')->where('user_id', $user->id)->where('pais', '!=', '')->distinct()->pluck('pais') ?? [];
 
         if($plan != 5)
         {
