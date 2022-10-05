@@ -33,7 +33,7 @@ class SegmentationController extends Controller
             {
                 return $item->departamento;
             }
-        }) ?? [];
+        })->filter()->values() ?? [];
         $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento')->map(function($item, $key){
             if($item->segmento != null)
             {
