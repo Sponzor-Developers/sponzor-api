@@ -85,8 +85,7 @@ class LeadsController extends Controller
         {
             return JsonController::return('error', 400, 'Nenhum lead encontrado', ['leads' => null]);
         }
-        $lead = DB::table('leads')->where('user_id', $user)->first();
-        $listleads = json_decode($lead->leads);
+        $listleads = json_decode($leads_process->leads);
         $leads = DB::table('contacts')->whereIn('id', $listleads)->get()->toArray();
         $filename = 'leads.csv';
         $handle = fopen($filename, 'w+');
