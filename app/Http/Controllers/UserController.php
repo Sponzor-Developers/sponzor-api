@@ -39,6 +39,9 @@ class UserController extends Controller
             'business' => 'string|max:255',
             'phone' => 'string|min:8|max:50',
         ]);
+        if(!$data) {
+            return JsonController::return('error', 400, 'Dados inválidos');
+        }
         return JsonController::return('success', 200, 'Dados atualizados', ['user' => DB::table('users')->where('id', $request->user()->id)->update($data)]);
     }
 
