@@ -22,7 +22,12 @@ class SegmentationController extends Controller
         $plan = $user->plan;
         $custom = DB::table('plans_person')->where('user_id', $user->id)->first();
         $fields = [];
-        $fields['cargo'] = DB::table('contacts')->select('cargo')->distinct()->get('cargo')->map(function($item, $key){
+        $fields['cargo'] = DB::table('contacts')
+        ->select('cargo')
+        ->distinct()
+        ->orderBy('cargo', 'ASC')
+        ->get('cargo')
+        ->map(function($item, $key){
             if($item->cargo != null){
                 return $item->cargo;
             }
@@ -52,17 +57,19 @@ class SegmentationController extends Controller
             }
         })->filter()->values() ?? [];
 
-        $fields['tamanho'] = DB::table('contacts')
-        ->select('tamanho')
-        ->distinct()
-        ->orderBy('tamanho', 'ASC')
-        ->get('tamanho')
-        ->map(function($item, $key){
-            if($item->tamanho != null)
-            {
-                return $item->tamanho;
-            }
-        })->filter()->values() ?? [];
+        $fields['tamanho'] = [
+            '1',
+            '2 a 10',
+            '11 a 20',
+            '21 a 50',
+            '51 a 100',
+            '101 a 500',
+            '501 a 1000',
+            '1001 a 5000',
+            '5001 a 10000',
+            'mais de 10000'
+        ];
+
 
         $fields['pais'] = DB::table('contacts')
         ->select('pais')
