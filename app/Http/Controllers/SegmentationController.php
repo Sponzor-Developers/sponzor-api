@@ -28,27 +28,48 @@ class SegmentationController extends Controller
             }
         })->filter()->values() ?? [];
 
-        $fields['departamento'] = DB::table('contacts')->select('departamento')->distinct()->get('departamento')->map(function($item, $key){
+        $fields['departamento'] = DB::table('contacts')
+        ->select('departamento')
+        ->distinct()
+        ->orderBy('departamento', 'ASC')
+        ->get('departamento')
+        ->map(function($item, $key){
             if($item->departamento != null)
             {
                 return $item->departamento;
             }
         })->filter()->values() ?? [];
-        $fields['segmento'] =  DB::table('contacts')->select('segmento')->distinct()->get('segmento')->map(function($item, $key){
+
+        $fields['segmento'] =  DB::table('contacts')
+        ->select('segmento')
+        ->distinct()
+        ->orderBy('segmento', 'ASC')
+        ->get('segmento')
+        ->map(function($item, $key){
             if($item->segmento != null)
             {
                 return $item->segmento;
             }
         })->filter()->values() ?? [];
 
-        $fields['tamanho'] = DB::table('contacts')->select('tamanho')->distinct()->get('tamanho')->map(function($item, $key){
+        $fields['tamanho'] = DB::table('contacts')
+        ->select('tamanho')
+        ->distinct()
+        ->orderBy('tamanho', 'ASC')
+        ->get('tamanho')
+        ->map(function($item, $key){
             if($item->tamanho != null)
             {
                 return $item->tamanho;
             }
         })->filter()->values() ?? [];
 
-        $fields['pais'] = DB::table('contacts')->select('pais')->distinct()->get('pais')->map(function($item, $key){
+        $fields['pais'] = DB::table('contacts')
+        ->select('pais')
+        ->distinct()
+        ->orderBy('pais', 'ASC')
+        ->get('pais')
+        ->map(function($item, $key){
             if($item->pais != null)
             {
                 return $item->pais;
@@ -86,7 +107,6 @@ class SegmentationController extends Controller
 
     public function filter(Request $request)
     {
-        // cargo,departamento,segmento,tamanho,pais e interações
         $data = $request->validate([
             'cargo' => 'array',
             'departamento' => 'array',
