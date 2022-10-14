@@ -168,8 +168,12 @@ class SegmentationController extends Controller
         {
             return JsonController::return('error', 400, 'Dados inválidos');
         }
-        // mudar o segmentação para 1
+        // verifica se o usuário já segmetou
         $user = $request->user();
+        if($user->segmentation == '1')
+        {
+            return JsonController::return('error', 400, 'Você já segmentou seus leads');
+        }
         $user->segmentation = 1;
         $user->save();
         // salvar os leads
