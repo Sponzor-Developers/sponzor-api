@@ -162,7 +162,7 @@ class SegmentationController extends Controller
     {
         $data = $request->validate([
             'leads' => 'required|array',
-            'leads.*' => 'required|string',
+            'leads.*' => 'required|integer',
         ]);
         if(!$data)
         {
